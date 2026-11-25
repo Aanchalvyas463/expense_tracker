@@ -16,7 +16,7 @@
         <p class="lp-subtitle">Spendly helps you log expenses, spot patterns, and stay on budget — without the spreadsheet headache.</p>
         <div class="lp-actions">
             <a href="{{ url_for('register') }}" class="lp-btn">Create free account</a>
-            <a href="#how-it-works" class="lp-btn">See how it works</a>
+            <a href="#how-it-works" class="lp-btn" id="how-it-works-btn">See how it works</a>
         </div>
         <div class="lp-preview">
             <div class="lp-dots"><span></span><span></span><span></span></div>
@@ -75,4 +75,47 @@
     </div>
 </section>
 
+<dialog class="lp-modal" id="video-modal" aria-label="How Spendly works">
+    <button type="button" class="lp-modal-close" id="video-modal-close" aria-label="Close">&times;</button>
+    <div class="lp-modal-video" id="video-modal-video">
+        <template>
+            <!-- Placeholder video: replace the ID after /embed/ -->
+            <iframe src="https://www.youtube.com/embed/aqz-KE-bpKQ"
+                    title="How Spendly works"
+                    allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </template>
+    </div>
+</dialog>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    (function () {
+        const modal = document.getElementById('video-modal');
+        const video = document.getElementById('video-modal-video');
+        const template = video.querySelector('template');
+
+        document.getElementById('how-it-works-btn').addEventListener('click', function (event) {
+            event.preventDefault();
+            video.appendChild(template.content.cloneNode(true));
+            modal.showModal();
+        });
+
+        document.getElementById('video-modal-close').addEventListener('click', function () {
+            modal.close();
+        });
+
+        // The dialog itself is only the click target when the backdrop is clicked.
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) modal.close();
+        });
+
+        // Runs for every way of closing (including Esc); removing the iframe stops the video.
+        modal.addEventListener('close', function () {
+            video.querySelector('iframe').remove();
+        });
+    })();
+</script>
 {% endblock %}
